@@ -50,3 +50,6 @@ const getMyCountryData = function (countryName) {
 };
 
 getMyCountryData('USA');
+getMyCountryData('India');
+getMyCountryData('Peru');
+getMyCountryData('Australia');
