@@ -5,24 +5,8 @@ const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
 
-// the vintage way
-const getMyCountryData = function (countryName) {
-  const myFirstAJAXviaXML = new XMLHttpRequest();
-  myFirstAJAXviaXML.open(
-    'GET',
-    `https://restcountries.com/v3.1/name/${countryName}`
-  );
-  myFirstAJAXviaXML.send();
-
-  // making it async via event listener
-
-  myFirstAJAXviaXML.addEventListener('load', function () {
-    const res = JSON.parse(myFirstAJAXviaXML.responseText)[0];
-
-    console.log(res);
-    console.log(res.capital[0]);
-
-    const modifiedHTML = `<article class="country">
+const finalHtml = function (res, className = '') {
+  const modifiedHTML = `<article class="country ${className}">
           <img class="country__img" src="${res.flags.svg}" />
           <div class="country__data">
             <h3 class="country__name">${res.name.common}</h3>
@@ -42,14 +26,51 @@ const getMyCountryData = function (countryName) {
           </div>
         </article>`;
 
-    // appending the modifies HTML to DOM
+  // appending the modifies HTML to DOM
 
-    countriesContainer.insertAdjacentHTML('beforeend', modifiedHTML);
-    countriesContainer.style.opacity = 1;
+  countriesContainer.insertAdjacentHTML('beforeend', modifiedHTML);
+  countriesContainer.style.opacity = 1;
+};
+
+// the vintage way
+const getMyCountryDatawithNeighbours = function (countryName) {
+  const myFirstAJAXviaXML = new XMLHttpRequest();
+  myFirstAJAXviaXML.open(
+    'GET',
+    `https://restcountries.com/v3.1/name/${countryName}`
+  );
+  myFirstAJAXviaXML.send();
+
+  // making it async via event listener
+
+  myFirstAJAXviaXML.addEventListener('load', function () {
+    const res = JSON.parse(myFirstAJAXviaXML.responseText)[0];
+
+    console.log(res.borders?.[0]);
+    // console.log(res.capital[0]);
+
+    const neighbourBorder = res.borders?.[0];
+
+    // rendering and appending the HTM to the DOM
+    finalHtml(res);
+
+    // seconf ajax call
+
+    const secondAJAXviaXML = new XMLHttpRequest();
+    secondAJAXviaXML.open(
+      'GET',
+      `https://restcountries.com/v3.1/alpha/${neighbourBorder}`
+    );
+
+    secondAJAXviaXML.send();
+
+    secondAJAXviaXML.addEventListener('load', function () {
+      const neighbourResponse = JSON.parse(secondAJAXviaXML.responseText)[0];
+      console.log(neighbourResponse);
+
+      finalHtml(neighbourResponse, 'neighbour');
+    });
   });
 };
 
-getMyCountryData('USA');
-getMyCountryData('India');
-getMyCountryData('Peru');
-getMyCountryData('Australia');
+getMyCountryDatawithNeighbours('india');
