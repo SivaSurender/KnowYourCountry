@@ -37,7 +37,15 @@ const KnowYourCountry = function (country) {
 
   response
     .then(oPOfRes => oPOfRes.json())
-    .then(finalOutput => finalHtml(finalOutput[0]));
+    .then(finalOutput => {
+      finalHtml(finalOutput[0]);
+      const neighbour = finalOutput[0].borders?.[0];
+      console.log(neighbour);
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then(res => res.json())
+    .then(finalres => finalHtml(finalres[0], 'neighbour'));
 };
 
 KnowYourCountry('portugal');
