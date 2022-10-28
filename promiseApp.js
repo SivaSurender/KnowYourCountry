@@ -48,4 +48,4 @@ const KnowYourCountry = function (country) {
     .then(finalres => finalHtml(finalres[0], 'neighbour'));
 };
 
-KnowYourCountry('portugal');
+KnowYourCountry('Canada');
