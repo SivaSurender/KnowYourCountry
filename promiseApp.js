@@ -45,7 +45,12 @@ const KnowYourCountry = function (country) {
       return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
     })
     .then(res => res.json())
-    .then(finalres => finalHtml(finalres[0], 'neighbour'));
+    .then(finalres => finalHtml(finalres[0], 'neighbour'))
+    .catch(error => console.log(error));
 };
 
-KnowYourCountry('Sri lanka');
+//adding button element
+
+btn.addEventListener('click', function () {
+  KnowYourCountry('Ireland');
+});
