@@ -3,6 +3,13 @@
 const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
+const errorHandler = function (errorMessage) {
+  //rendering the dom with obtainer error message
+
+  countriesContainer.insertAdjacentText('beforeend', errorMessage);
+  // countriesContainer.style.opacity = 1;
+};
+
 const finalHtml = function (res, className = '') {
   const modifiedHTML = `<article class="country ${className}">
           <img class="country__img" src="${res.flags.svg}" />
@@ -27,7 +34,7 @@ const finalHtml = function (res, className = '') {
   // appending the modifies HTML to DOM
 
   countriesContainer.insertAdjacentHTML('beforeend', modifiedHTML);
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
 };
 
 const KnowYourCountry = function (country) {
@@ -46,7 +53,11 @@ const KnowYourCountry = function (country) {
     })
     .then(res => res.json())
     .then(finalres => finalHtml(finalres[0], 'neighbour'))
-    .catch(error => console.log(error));
+    .catch(error => errorHandler(`Sorry something went wrong due to ${error}`))
+    .finally(() => {
+      // finally block happens no matter what
+      countriesContainer.style.opacity = 1;
+    });
 };
 
 //adding button element
