@@ -38,7 +38,13 @@ const finalHtml = function (res, className = '') {
 };
 
 const getJson = function (url) {
-  return fetch(url).then(res => res.json());
+  return fetch(url).then(res => {
+    // console.log(res);
+    if (!res.ok) {
+      throw new Error(`${res.status} Entered Country does not exist🤐`);
+    }
+    return res.json();
+  });
 };
 
 const KnowYourCountry = function (country) {
@@ -52,14 +58,19 @@ const KnowYourCountry = function (country) {
     .then(([dat]) => {
       finalHtml(dat);
       const neighbour = dat.borders?.[0];
-      console.log(neighbour);
+      console.log();
+      if (!neighbour) {
+        throw new Error(
+          `${neighbour} This Country doesn't have a neighbour 😅`
+        );
+      }
 
       // return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
       return getJson(`https://restcountries.com/v3.1/alpha/${neighbour}`);
     })
     // .then(res => res.json())
     .then(finalres => finalHtml(finalres[0], 'neighbour'))
-    .catch(error => errorHandler(`Sorry something went wrong due to ${error}`))
+    .catch(error => errorHandler(`Oops there's been an ${error}`))
     .finally(() => {
       // finally block happens no matter what
       countriesContainer.style.opacity = 1;
@@ -69,5 +80,5 @@ const KnowYourCountry = function (country) {
 //adding button element
 
 btn.addEventListener('click', function () {
-  KnowYourCountry('India');
+  KnowYourCountry('Australia');
 });
