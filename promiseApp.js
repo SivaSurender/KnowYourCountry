@@ -37,21 +37,27 @@ const finalHtml = function (res, className = '') {
   // countriesContainer.style.opacity = 1;
 };
 
+const getJson = function (url) {
+  return fetch(url).then(res => res.json());
+};
+
 const KnowYourCountry = function (country) {
-  const response = fetch(`https://restcountries.com/v3.1/name/${country}`);
+  // const response = fetch(`https://restcountries.com/v3.1/name/${country}`);
 
-  // handling the promise
+  // // handling the promise
 
-  response
-    .then(oPOfRes => oPOfRes.json())
+  // response
+  //   .then(oPOfRes => oPOfRes.json())
+  getJson(`https://restcountries.com/v3.1/name/${country}`)
     .then(([dat]) => {
       finalHtml(dat);
       const neighbour = dat.borders?.[0];
       console.log(neighbour);
 
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      // return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      return getJson(`https://restcountries.com/v3.1/alpha/${neighbour}`);
     })
-    .then(res => res.json())
+    // .then(res => res.json())
     .then(finalres => finalHtml(finalres[0], 'neighbour'))
     .catch(error => errorHandler(`Sorry something went wrong due to ${error}`))
     .finally(() => {
@@ -63,5 +69,5 @@ const KnowYourCountry = function (country) {
 //adding button element
 
 btn.addEventListener('click', function () {
-  KnowYourCountry('Ireland');
+  KnowYourCountry('India');
 });
