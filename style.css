@@ -12,7 +12,9 @@ html {
 body {
   font-family: system-ui;
   color: #555;
-  background-color: #f7f7f7;
+  /* background-color: #f7f7f7;  */
+  background-image: linear-gradient(#3eadcf, #abe9cd);
+
   min-height: 100vh;
 
   display: flex;
@@ -55,7 +57,7 @@ body {
   font-size: 1.8rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #888;
+  color: rgb(8, 8, 8);
 }
 
 .neighbour {
