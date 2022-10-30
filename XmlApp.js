@@ -73,4 +73,4 @@ const getMyCountryDatawithNeighbours = function (countryName) {
   });
 };
 
-getMyCountryDatawithNeighbours('india');
+getMyCountryDatawithNeighbours('Japan');
