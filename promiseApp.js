@@ -77,9 +77,9 @@ const KnowYourCountry = function (country) {
 
 //adding button element
 
-btn.addEventListener('click', function () {
-  KnowYourCountry('Australia');
-});
+// btn.addEventListener('click', function () {
+//   KnowYourCountry('Australia');
+// });
 
 // exercise
 
@@ -98,9 +98,9 @@ const whereAmI = function (lattitude, longitude) {
       }
 
       console.log(`Hey there!, you're in ${city}, ${country}`);
-      return city, country;
+      return country;
     })
-    .catch(err => console.log(err));
+    .then(count => KnowYourCountry(count));
 };
 
 whereAmI(52.508, 13.381);
