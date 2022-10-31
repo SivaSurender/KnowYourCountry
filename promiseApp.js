@@ -60,9 +60,7 @@ const KnowYourCountry = function (country) {
       const neighbour = dat.borders?.[0];
       console.log();
       if (!neighbour) {
-        throw new Error(
-          `${neighbour} This Country doesn't have a neighbour 😅`
-        );
+        throw new Error(`This Country doesn't have a neighbour 😅`);
       }
 
       // return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
@@ -82,3 +80,27 @@ const KnowYourCountry = function (country) {
 btn.addEventListener('click', function () {
   KnowYourCountry('Australia');
 });
+
+// exercise
+
+const whereAmI = function (lattitude, longitude) {
+  const res = fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lattitude}&lon=${longitude}&zoom=10`
+  );
+
+  res
+    .then(res => res.json())
+    .then(final => {
+      const { city, country } = final?.features[0]?.properties?.address;
+
+      if (!city) {
+        throw new Error('Enetered co-ordinates are not valid');
+      }
+
+      console.log(`Hey there!, you're in ${city}, ${country}`);
+      return city, country;
+    })
+    .catch(err => console.log(err));
+};
+
+whereAmI(52.508, 13.381);
