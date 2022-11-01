@@ -75,12 +75,6 @@ const KnowYourCountry = function (country) {
     });
 };
 
-//adding button element
-
-// btn.addEventListener('click', function () {
-//   KnowYourCountry('Australia');
-// });
-
 // exercise
 
 const whereAmI = function (lattitude, longitude) {
@@ -93,14 +87,45 @@ const whereAmI = function (lattitude, longitude) {
     .then(final => {
       const { city, country } = final?.features[0]?.properties?.address;
 
-      if (!city) {
+      if (!country) {
         throw new Error('Enetered co-ordinates are not valid');
       }
 
       console.log(`Hey there!, you're in ${city}, ${country}`);
       return country;
     })
-    .then(count => KnowYourCountry(count));
+    .then(count => KnowYourCountry(count))
+    .catch(error => console.log(error));
 };
 
-whereAmI(52.508, 13.381);
+// const getPosition = navigator.geolocation.getCurrentPosition(
+//   pos => {
+//     const { latitude, longitude } = pos.coords;
+
+//     return latitude, longitude;
+//   },
+//   error => console.log(error)
+// );
+
+// promisinfying above geolocation function
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition()
+  .then(pos => {
+    const { latitude, longitude } = pos.coords;
+    console.log(latitude, longitude);
+
+    //ccalling the where am i function right away
+    whereAmI(latitude, longitude);
+  })
+  .catch(error => console.error(error));
+
+//adding button element and event listener
+
+btn.addEventListener('click', function () {
+  getPosition;
+});
