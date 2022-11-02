@@ -75,14 +75,30 @@ const KnowYourCountry = function (country) {
     });
 };
 
+// calculating latitude and longitude of current location with geolocation web api
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition().then(pos => {
+  const { latitude, longitude } = pos.coords;
+  console.log(latitude, longitude);
+});
+
 // exercise
 
-const whereAmI = function (lattitude, longitude) {
-  const res = fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lattitude}&lon=${longitude}&zoom=10`
-  );
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude, longitude } = pos.coords;
+      console.log(latitude, longitude);
 
-  res
+      return fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${latitude}&lon=${longitude}&zoom=10`
+      );
+    })
     .then(res => res.json())
     .then(final => {
       const { city, country } = final?.features[0]?.properties?.address;
@@ -91,11 +107,15 @@ const whereAmI = function (lattitude, longitude) {
         throw new Error('Enetered co-ordinates are not valid');
       }
 
-      console.log(`Hey there!, you're in ${city}, ${country}`);
+      // countriesContainer.insertAdjacentText(
+      //   'beforeend',
+      //   `Hey there!, you're in ${city}, ${country}`
+      // );
       return country;
     })
     .then(count => KnowYourCountry(count))
     .catch(error => console.log(error));
+  btn.style.display = 'none';
 };
 
 // const getPosition = navigator.geolocation.getCurrentPosition(
@@ -107,25 +127,7 @@ const whereAmI = function (lattitude, longitude) {
 //   error => console.log(error)
 // );
 
-// promisinfying above geolocation function
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
-
-getPosition()
-  .then(pos => {
-    const { latitude, longitude } = pos.coords;
-    console.log(latitude, longitude);
-
-    //ccalling the where am i function right away
-    whereAmI(latitude, longitude);
-  })
-  .catch(error => console.error(error));
-
 //adding button element and event listener
 
-btn.addEventListener('click', function () {
-  getPosition;
-});
+// once true= running the click even only once
+btn.addEventListener('click', whereAmI, { once: true });
