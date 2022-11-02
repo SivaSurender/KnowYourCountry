@@ -84,20 +84,26 @@ const getPosition = function () {
 
 // exercise
 const whereAmI = async function () {
-  const res1 = await getPosition();
-  const { latitude: lat, longitude: long } = res1.coords;
+  try {
+    const res1 = await getPosition();
+    const { latitude: lat, longitude: long } = res1.coords;
 
-  const res2 = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${long}&zoom=10`
-  );
+    const res2 = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${long}&zoom=10`
+    );
 
-  const res3 = await res2.json();
-  const { city, country } = res3?.features[0]?.properties?.address;
+    const res3 = await res2.json();
+    const { city, country } = res3?.features[0]?.properties?.address;
+    if (!country || !city) {
+      throw new Error('Enetered co-ordinates are not valid');
+    }
+    console.log(city, country);
 
-  console.log(city, country);
-
-  await KnowYourCountry(country);
-  btn.style.display = 'none';
+    KnowYourCountry(country);
+    btn.style.display = 'none';
+  } catch (error) {
+    errorHandler(error);
+  }
 };
 
 // calling the addeven on button
