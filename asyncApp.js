@@ -82,52 +82,24 @@ const getPosition = function () {
   });
 };
 
-getPosition().then(pos => {
-  const { latitude, longitude } = pos.coords;
-  console.log(latitude, longitude);
-});
-
 // exercise
+const whereAmI = async function () {
+  const res1 = await getPosition();
+  const { latitude: lat, longitude: long } = res1.coords;
 
-const whereAmI = function () {
-  getPosition()
-    .then(pos => {
-      const { latitude, longitude } = pos.coords;
-      console.log(latitude, longitude);
+  const res2 = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${long}&zoom=10`
+  );
 
-      return fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${latitude}&lon=${longitude}&zoom=10`
-      );
-    })
-    .then(res => res.json())
-    .then(final => {
-      const { city, country } = final?.features[0]?.properties?.address;
+  const res3 = await res2.json();
+  const { city, country } = res3?.features[0]?.properties?.address;
 
-      if (!country || !city) {
-        throw new Error('Enetered co-ordinates are not valid');
-      }
+  console.log(city, country);
 
-      // countriesContainer.insertAdjacentText(
-      //   'beforeend',
-      //   `Hey there!, you're in ${city}, ${country}`
-      // );
-      return country;
-    })
-    .then(count => KnowYourCountry(count))
-    .catch(error => console.log(error));
+  await KnowYourCountry(country);
   btn.style.display = 'none';
 };
 
-// const getPosition = navigator.geolocation.getCurrentPosition(
-//   pos => {
-//     const { latitude, longitude } = pos.coords;
+// calling the addeven on button
 
-//     return latitude, longitude;
-//   },
-//   error => console.log(error)
-// );
-
-//adding button element and event listener
-
-// once true= running the click even only once
-btn.addEventListener('click', whereAmI, { once: true });
+btn.addEventListener('click', whereAmI);
